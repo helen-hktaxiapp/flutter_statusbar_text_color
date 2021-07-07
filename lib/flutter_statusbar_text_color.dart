@@ -7,7 +7,7 @@ class FlutterStatusbarTextColor {
   static String light = 'light';
   static String dark = 'dark';
 
-  static setTextColor(String mode) async {
+  static setTextColor(String? mode) async {
     await _channel.invokeMethod(mode ?? 'default');
   }
 }

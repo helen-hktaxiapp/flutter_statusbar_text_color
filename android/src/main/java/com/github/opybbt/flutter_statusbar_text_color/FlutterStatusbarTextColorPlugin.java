@@ -7,11 +7,33 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 
 /** FlutterStatusbarTextColorPlugin */
-public class FlutterStatusbarTextColorPlugin implements MethodCallHandler {
+public class FlutterStatusbarTextColorPlugin implements MethodCallHandler, FlutterPlugin {
+  private MethodChannel methodChannel;
+
   /** Plugin registration. */
   public static void registerWith(Registrar registrar) {
-    final MethodChannel channel = new MethodChannel(registrar.messenger(), "flutter_statusbar_text_color");
-    channel.setMethodCallHandler(new FlutterStatusbarTextColorPlugin());
+    FlutterStatusbarTextColorPlugin instance = new FlutterStatusbarTextColorPlugin();
+    instance.initInstance(registrar.messenger(), registrar.context());
+  }
+
+  public void initInstance(BinaryMessenger messenger, Context context){
+    methodChannel = new MethodChannel(messenger, "flutter_statusbar_text_color");
+    methodChannel.setMethodCallHandler(new FlutterStatusbarTextColorPlugin());
+  }
+
+  private void dispose(){
+    methodChannel.setMethodCallHandler(null);
+    methodChannel = null;
+  }
+
+  @Override 
+  public void onAttachedToEngine(FlutterPluginBinding binding){
+    initInstance(binding.getBinaryMessenger(), binding.getApplicationContext());
+  }
+
+  @Override
+  public void onDetachedFromEngine(FlutterPlugin binding){
+    dispose();
   }
 
   @Override
